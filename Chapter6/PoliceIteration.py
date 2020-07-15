@@ -15,19 +15,7 @@ policy_0 = [0] * 100
 policy_1 = [1] * 100
 np.random.seed(0)
 
-def test_easy():
-    np.random.seed(0)
-    sum_opt = 0
-    sum_0 = 0
-    sum_1 = 0
-    env = SnakeEnv(0, [3, 6])
-    for i in range(10000):
-        sum_opt += eval_game(env, policy_ref)
-        sum_0 += eval_game(env, policy_0)
-        sum_1 += eval_game(env, policy_1)
-    print('opt avg={}'.format(sum_opt / 10000.0))
-    print('0 avg={}'.format(sum_0 / 10000))
-    print('1 avg={}'.format(sum_1 / 10000))
+
 
 class PolicyIteration(object):#策略收敛，计算价值；利用价值，找到更好的策略（动作）；在新的策略下，计算收敛价值；循环更新更好的策略
 
@@ -110,8 +98,24 @@ def policy_iteration_demo2():
     print ('return_pi={}'.format(eval_game(env,agent)))
     print (agent.pi)
 
+
+def tst_easy():
+    np.random.seed(0)
+    sum_opt = 0
+    sum_0 = 0
+    sum_1 = 0
+    env = SnakeEnv(0, [3, 6])
+    for i in range(10000):
+        sum_opt += eval_game(env, policy_ref)
+        sum_0 += eval_game(env, policy_0)
+        sum_1 += eval_game(env, policy_1)
+    print('opt avg={}'.format(sum_opt / 10000.0))
+    print('0 avg={}'.format(sum_0 / 10000))
+    print('1 avg={}'.format(sum_1 / 10000))
+
+
 if __name__ == '__main__':
-    # test_easy()
+    tst_easy()
     policy_iteration_demo1()
     policy_iteration_demo2()
 

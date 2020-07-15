@@ -26,7 +26,7 @@ class SnakeEnv(gym.Env):
 
         for k,v in list(self.ladders.items()):
             self.ladders[v] = k
-            # print 'ladders info:'
+            print('ladders info:{}'.format(self.ladders))
             # print self.ladders
             # print 'dice ranges:'
             # print self.dices

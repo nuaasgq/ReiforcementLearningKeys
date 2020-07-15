@@ -9,13 +9,13 @@ class SnakeEnv(gym.Env):
         self.ladder_num = ladder_num
         self.dices = dices
         self.ladders = dict(np.random.randint(1, self.SIZE, size=(self.ladder_num, 2)))
-        self.observation_space=Discrete(self.SIZE+1)
-        self.action_space=Discrete(len(dices))
+        self.observation_space = Discrete(self.SIZE+1)
+        self.action_space = Discrete(len(dices))
 
         for k,v in list(self.ladders.items()):
             self.ladders[v] = k
-            # print ('ladders info:')
-            # print (self.ladders)
+            # print('ladders info:')
+            # print(self.ladders)
             # print ('dice ranges:')
             # print (self.dices)
         self.pos = 1
@@ -59,7 +59,7 @@ class TableAgent(object):
         for i, dice in enumerate(env.dices):
             prob = 1.0 / dice
             for src in range(1, 100):
-                step = np.arange(dice)
+                step = np.arange(1, dice+1)  # 书中没有+1，但arange函数如果只有一个参数，返回值是一个从0开始到参数-1的列表，而掷骰子是从1开始的，所以我认为应该+1
                 step += src
                 step = np.piecewise(step, [step > 100, step <= 100],
                     [lambda x: 200 - x, lambda x: x])
@@ -86,7 +86,7 @@ class ModelFreeAgent(object):
 
     def play(self, state, epsilon = 0):
         if np.random.rand() < epsilon:
-            return np.random.randint(self.a_len)
+            return np.random.randint(self.a_len)  # self.a_len表示有几个动作
         else:
             return self.pi[state]
 
