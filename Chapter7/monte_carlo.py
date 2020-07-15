@@ -22,7 +22,7 @@ class MonteCarlo(object):
     def monte_carlo_eval(self, agent, env):
         state = env.reset()
         episode = []
-        while True:
+        while True:  # 随机生成一个状态动作序列，并存储到episode中
             ac = agent.play(state, self.epsilon)
             next_state, reward, terminate, _ = env.step(ac)
             episode.append((state, ac, reward))
@@ -36,10 +36,18 @@ class MonteCarlo(object):
             return_val = return_val * agent.gamma + item[2]
             value.append((item[0], item[1], return_val))
         # every visit
-        for item in reversed(value):
-            agent.value_n[item[0]][item[1]] += 1
-            agent.value_q[item[0]][item[1]] += (item[2] - agent.value_q[item[0]][item[1]]) / agent.value_n[item[0]][item[1]]
+        # for item in reversed(value):
+        #     agent.value_n[item[0]][item[1]] += 1
+        #     agent.value_q[item[0]][item[1]] += (item[2] - agent.value_q[item[0]][item[1]]) / \
+        #                                        agent.value_n[item[0]][item[1]]  # 更新不同时刻的Q值
         # first visit
+        first_visit = np.zeros((agent.s_len, agent.a_len))
+        for item in reversed(value):
+            first_visit[item[0]][item[1]] += 1
+            agent.value_n[item[0]][item[1]] += 1
+            if first_visit[item[0]][item[1]] == 1:
+                agent.value_q[item[0]][item[1]] += (item[2] - agent.value_q[item[0]][item[1]]) / \
+                                                   agent.value_n[item[0]][item[1]]  # 更新不同时刻的Q值
 
     def policy_improve(self, agent):
         new_policy = np.zeros_like(agent.pi)
@@ -61,7 +69,7 @@ class MonteCarlo(object):
 
 def monte_carlo_demo():
     np.random.seed(101)
-    env = SnakeEnv(10, [3, 6])
+    env = SnakeEnv(0, [3, 6])
     agent = ModelFreeAgent(env)
     mc = MonteCarlo()
     with timer('Timer Monte Carlo Iter'):
@@ -80,7 +88,7 @@ def monte_carlo_demo():
 
 def monte_carlo_demo2():
     np.random.seed(101)
-    env = SnakeEnv(10, [3, 6])
+    env = SnakeEnv(0, [3, 6])
     agent = ModelFreeAgent(env)
     mc = MonteCarlo(0.5)
     with timer('Timer Monte Carlo Iter'):
